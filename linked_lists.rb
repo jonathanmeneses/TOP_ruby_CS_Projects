@@ -73,6 +73,52 @@ class LinkedList
     false
   end
 
+  def find(check_value)
+    index_counter = 0
+    current_node = self.head
+    while current_node
+      return index_counter if current_node.value == check_value
+      current_node = current_node.next_node
+      index_counter += 1
+    end
+    nil
+  end
+
+  def to_s
+    current_node = self.head
+    string_rep = ''
+    while current_node
+      string_rep += "(#{current_node.value}) -> "
+      current_node = current_node.next_node
+    end
+    string_rep+= 'nil'
+    string_rep
+  end
+
+  def insert_at(value,index)
+    if index > self.size then raise "index out of range" end
+
+    if index == 0
+      new_node = Node.new(value,self.head)
+      self.head = new_node
+    else
+
+      index_counter = 0
+      current_node = self.head
+      while index_counter < index-1
+        current_node = current_node.next_node
+        index_counter += 1
+      end
+
+      pre_index = current_node
+      post_index = current_node.next_node
+
+      new_node = Node.new(value,post_index)
+      pre_index.next_node = new_node
+    end
+    new_node
+  end
+
 end
 
 
