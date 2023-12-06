@@ -49,8 +49,88 @@ def insert_number(num, node = self.root)
   end
 end
 
-def delete_number(num, node = self.root)
+def delete_number(num, node = self.root, parent = nil)
 #SOLVE ME
+#
+
+# Is node a leaf?
+#   Then just delete the node, and update the parent node
+# If node has 1 child
+#   the child now replaces the node as the child of the parent
+# If the node has 2 children, find the "next biggest"
+#   Do this by findind the very far left of the right subtree
+#   Replace the deleted node with the found node
+#     udpate the child nodes and parent
+
+#traverse the tree to find the node
+
+  return nil if node.nil?
+
+
+  if num < node.data
+    delete_number(num,node.left, node)
+  elsif num > node.data
+    delete_number(num,node.right, node)
+  else
+
+  # Leaf Node
+  if node.left == nil && node.right == nil
+    if parent.nil?
+      self.root = nil
+    elsif parent.left = node
+      parent.left = nil
+    else
+      parent.right = nil
+    end
+  # 1 child node
+  elsif node.left.nil? || node.right.nil?
+    child = node.left.nil? ? node.right : node.left
+
+    if parent.nil?
+      self.root = child
+    else
+      parent.left == node ? parent.left = child : parent.right = child
+    end
+  # 2 child node
+  elsif node.left && node.right
+    successor_node = node.right
+    successor_parent = node
+    until search_node.left.nil?
+      successor_parent = search_node
+      successor_node = successor_node.left
+    end
+
+    node.data = successor_node.data
+
+    if successor_parent == node
+      successor_parent.right = successor_node.right
+    else
+      successor_parent.left = successor_node.right
+    end
+
+    end
+
+
+
+
+
+end
+
+def find(num, node = self.root)
+  #traverse the tree to find the node
+
+  if node.data == num
+    return node
+  else
+    if num < node.data
+      find(num,node.left)
+    elsif num > node.data
+      node(num,node.right)
+    end
+  end
+
+
+
 end
 
 end
