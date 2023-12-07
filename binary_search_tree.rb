@@ -127,6 +127,104 @@ class Tree
       find_in_tree(num, node.right)
     end
   end
+
+  def level_order(node = self.root)
+    return [] if node.nil?
+    queue = [node]
+    return_array = []
+    until queue.empty?
+      process_node = queue.shift
+      if block_given?
+        yield process_node.data
+      else
+        return_array << process_node.data
+      end
+      queue << process_node.left if process_node.left
+      queue << process_node.right if process_node.right
+    end
+
+    return_array unless block_given?
+
+  end
+
+
+  def inorder(node = self.root, return_array = [], &block)
+    return if node.nil?
+
+    inorder(node.left, return_array, &block)
+    if block_given?
+      yield node.data
+    else
+      return_array << node.data
+    end
+    inorder(node.right, return_array, &block)
+
+    if !block_given?
+      return_array
+    end
+
+  end
+
+  def preorder(node = self.root, return_array = [], &block)
+    return if node.nil?
+
+    if block_given?
+      yield node.data
+    else
+      return_array << node.data
+    end
+    preorder(node.left, return_array, &block)
+    preorder(node.right, return_array, &block)
+
+    if !block_given?
+      return_array
+    end
+
+  end
+
+  def postorder(node = self.root, return_array = [], &block)
+    return if node.nil?
+
+
+    postorder(node.left, return_array, &block)
+    postorder(node.right, return_array, &block)
+    if block_given?
+      yield node.data
+    else
+      return_array << node.data
+    end
+
+    if !block_given?
+      return_array
+    end
+
+  end
+
+
+
+
+  def height(node = self.root)
+    return -1 if node.nil?
+
+    left_height = height(node.left)
+    right_height = height(node.right)
+
+    [left_height, right_height].max + 1
+
+  end
+
+  def depth(node, root = self.root)
+    counter = 0
+    if node.nil?
+      return -1
+    elsif
+    end
+  end
+
+  private
+
+
+
 end
 
 
@@ -139,4 +237,9 @@ tree.pretty_print
 tree.insert_number(15)
 
 
-p tree.find_in_tree(4)
+p tree.height()
+
+tree.inorder {|n| puts n*2}
+p "/n /n \n new lines"
+p tree.preorder
+p tree.postorder
