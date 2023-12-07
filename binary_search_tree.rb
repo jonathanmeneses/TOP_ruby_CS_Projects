@@ -213,15 +213,46 @@ class Tree
 
   end
 
-  def depth(node, root = self.root)
-    counter = 0
-    if node.nil?
-      return -1
-    elsif
+  def depth(node, current_node = self.root, counter = 0)
+    return nil if (current_node.nil? || node.nil?)
+
+    if node == current_node
+      return counter
+    elsif node.data < current_node.data
+      depth(node, current_node.left, counter + 1)
+    else
+      depth(node, current_node.right, counter + 1 )
     end
   end
 
-  private
+  def balanced?(node = self.root)
+    self.check_balance(node) != -1
+  end
+
+  def check_balance(node)
+    return 0 if node.nil?  # Base case: the height of an empty tree
+
+    left_height = check_balance(node.left)
+    return -1 if left_height == -1  # Propagate the unbalanced signal up
+
+    right_height = check_balance(node.right)
+    return -1 if right_height == -1  # Propagate the unbalanced signal up
+
+    # Check if current node is unbalanced
+    return -1 if (left_height - right_height).abs > 1
+
+    # Return the height of the current node
+    p "height of #{node.data} is #{[left_height, right_height].max + 1}"
+    return [left_height, right_height].max + 1
+  end
+
+
+  def rebalance(node = self.root)
+    if !self.balanced?
+      array_for_build = self.inorder(node)
+      self.root = self.build_tree(array_for_build)
+    end
+  end
 
 
 
@@ -229,17 +260,32 @@ end
 
 
 
-array = [12,3,1,7,23,4,17,8]
+array = (Array.new(15) { rand(1..100) })
 tree = Tree.new(array)
+
+p tree.balanced?
+
+tree.level_order
+tree.preorder
+tree.postorder
+tree.inorder
+
+15.times do
+  tree.insert_number(rand(100..1500))
+end
 
 tree.pretty_print
 
-tree.insert_number(15)
+p tree.balanced?
 
 
-p tree.height()
+tree.rebalance()
 
-tree.inorder {|n| puts n*2}
-p "/n /n \n new lines"
-p tree.preorder
-p tree.postorder
+p tree.balanced?
+
+
+tree.pretty_print
+tree.level_order
+tree.preorder
+tree.postorder
+tree.inorder
